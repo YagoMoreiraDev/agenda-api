@@ -1,5 +1,6 @@
 package br.gov.ce.direitoshumanos.api_agenda.repositories;
 
+import br.gov.ce.direitoshumanos.api_agenda.enums.StatusEnum;
 import br.gov.ce.direitoshumanos.api_agenda.models.Agenda;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,5 +81,15 @@ public interface AgendaRepository extends JpaRepository<Agenda, Long> {
     ORDER BY a.dataHoraReuniao DESC
     """)
     List<Agenda> buscarHistoricoDeReunioesFetch(@Param("usuarioId") Long usuarioId);
+
+    @Query("""
+    select a from Agenda a
+    left join fetch a.participantes
+    where (a.criador.id = :usuarioId or :usuarioId in (
+        select p.id from a.participantes p
+    )) and a.status = :status
+    order by a.dataHoraReuniao
+    """)
+    List<Agenda> buscarPorStatus(@Param("status") StatusEnum status, @Param("usuarioId") Long usuarioId);
 
 }

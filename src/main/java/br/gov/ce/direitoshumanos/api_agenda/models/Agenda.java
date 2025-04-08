@@ -1,5 +1,6 @@
 package br.gov.ce.direitoshumanos.api_agenda.models;
 
+import br.gov.ce.direitoshumanos.api_agenda.enums.StatusEnum;
 import br.gov.ce.direitoshumanos.api_agenda.enums.TipoAgenda;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,4 +45,8 @@ public class Agenda {
 
     @Enumerated(EnumType.STRING)
     private TipoAgenda tipo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusEnum status = StatusEnum.PENDENTE;
 }

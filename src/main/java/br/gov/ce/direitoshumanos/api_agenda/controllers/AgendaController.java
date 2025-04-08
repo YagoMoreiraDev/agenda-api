@@ -2,6 +2,7 @@ package br.gov.ce.direitoshumanos.api_agenda.controllers;
 
 import br.gov.ce.direitoshumanos.api_agenda.dtos.AgendaDTO;
 import br.gov.ce.direitoshumanos.api_agenda.dtos.AgendaResponseDTO;
+import br.gov.ce.direitoshumanos.api_agenda.enums.StatusEnum;
 import br.gov.ce.direitoshumanos.api_agenda.models.Agenda;
 import br.gov.ce.direitoshumanos.api_agenda.services.AgendaService;
 import jakarta.validation.Valid;
@@ -77,5 +78,28 @@ public class AgendaController {
         agendaService.deletar(id);
         return ResponseEntity.noContent().build();
     }
-}
 
+    // 🔹 GET - Buscar agendas por status
+    @GetMapping("/status")
+    public Page<AgendaResponseDTO> listarPorStatus(
+            @RequestParam StatusEnum status,
+            @RequestParam Long usuarioId,
+            @RequestParam(defaultValue = "0") int pagina
+    ) {
+        return agendaService.listarPorStatus(status, usuarioId, pagina);
+    }
+
+    // 🔹 PUT - Confirmar uma agenda
+    @PutMapping("/{id}/confirmar")
+    public ResponseEntity<AgendaResponseDTO> confirmarAgenda(@PathVariable Long id) {
+        Agenda confirmada = agendaService.atualizarStatus(id, StatusEnum.CONFIRMADO);
+        return ResponseEntity.ok(agendaService.toDTO(confirmada));
+    }
+
+    // 🔹 PUT - Cancelar uma agenda
+    @PutMapping("/{id}/cancelar")
+    public ResponseEntity<AgendaResponseDTO> cancelarAgenda(@PathVariable Long id) {
+        Agenda cancelada = agendaService.atualizarStatus(id, StatusEnum.CANCELADO);
+        return ResponseEntity.ok(agendaService.toDTO(cancelada));
+    }
+}

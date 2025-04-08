@@ -3,6 +3,7 @@ package br.gov.ce.direitoshumanos.api_agenda.services;
 import br.gov.ce.direitoshumanos.api_agenda.dtos.AgendaDTO;
 import br.gov.ce.direitoshumanos.api_agenda.dtos.AgendaResponseDTO;
 import br.gov.ce.direitoshumanos.api_agenda.dtos.ParticipanteDTO;
+import br.gov.ce.direitoshumanos.api_agenda.enums.StatusEnum;
 import br.gov.ce.direitoshumanos.api_agenda.enums.TipoAgenda;
 import br.gov.ce.direitoshumanos.api_agenda.models.Agenda;
 import br.gov.ce.direitoshumanos.api_agenda.models.Local;
@@ -16,7 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -90,6 +91,8 @@ public class AgendaService {
         agenda.setDataHoraReuniao(dto.getDataHoraReuniao());
         agenda.setAssunto(dto.getAssunto());
         agenda.setTipo(dto.getTipo());
+
+        agenda.setStatus(StatusEnum.PENDENTE);
 
         return agendaRepository.save(agenda);
     }
@@ -178,6 +181,34 @@ public class AgendaService {
                 .toList();
 
         return new PageImpl<>(pageContent, pageable, lista.size());
+    }
+
+    public Page<AgendaResponseDTO> listarPorStatus(StatusEnum status, Long usuarioId, int pagina) {
+        Pageable pageable = PageRequest.of(pagina, 10);
+        Set<Agenda> agendasUnicas = new LinkedHashSet<>(
+                agendaRepository.buscarPorStatus(status, usuarioId)
+        );
+
+        List<Agenda> lista = new ArrayList<>(agendasUnicas);
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), lista.size());
+
+        List<AgendaResponseDTO> pageContent = lista.subList(start, end)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+
+        return new PageImpl<>(pageContent, pageable, lista.size());
+    }
+
+    /**
+     * Atualiza o status de uma agenda existente.
+     * Apenas participantes devem poder fazer isso.
+     */
+    public Agenda atualizarStatus(Long agendaId, StatusEnum novoStatus) {
+        Agenda agenda = buscarPorId(agendaId);
+        agenda.setStatus(novoStatus);
+        return agendaRepository.save(agenda);
     }
 
     public AgendaResponseDTO toDTO(Agenda agenda) {
