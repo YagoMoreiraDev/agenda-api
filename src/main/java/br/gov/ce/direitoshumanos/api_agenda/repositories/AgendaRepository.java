@@ -92,4 +92,6 @@ public interface AgendaRepository extends JpaRepository<Agenda, Long> {
     """)
     List<Agenda> buscarPorStatus(@Param("status") StatusEnum status, @Param("usuarioId") Long usuarioId);
 
+    boolean existsByLocalIdAndDataHoraReuniao(Long localId, LocalDateTime dataHoraReuniao);
+
 }

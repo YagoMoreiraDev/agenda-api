@@ -74,7 +74,11 @@ public class AgendaService {
         Local local = localRepository.findById(dto.getLocalId())
                 .orElseThrow(() -> new RuntimeException("Local não encontrado"));
 
-        // Validação condicional: reunião exige participantes
+        // ✅ Verificação de conflito
+        if (agendaRepository.existsByLocalIdAndDataHoraReuniao(dto.getLocalId(), dto.getDataHoraReuniao())) {
+            throw new RuntimeException("Já existe um agendamento neste local, data e hora.");
+        }
+
         if (dto.getTipo() == TipoAgenda.REUNIAO &&
                 (dto.getParticipantesIds() == null || dto.getParticipantesIds().isEmpty())) {
             throw new RuntimeException("Reuniões devem ter pelo menos um participante");
@@ -91,11 +95,11 @@ public class AgendaService {
         agenda.setDataHoraReuniao(dto.getDataHoraReuniao());
         agenda.setAssunto(dto.getAssunto());
         agenda.setTipo(dto.getTipo());
-
         agenda.setStatus(StatusEnum.PENDENTE);
 
         return agendaRepository.save(agenda);
     }
+
 
     /**
      * Remover reunião por ID
@@ -217,6 +221,8 @@ public class AgendaService {
         dto.setAssunto(agenda.getAssunto());
         dto.setDataHoraReuniao(agenda.getDataHoraReuniao());
         dto.setTipo(agenda.getTipo());
+
+        dto.setStatus(agenda.getStatus());
 
         dto.setCriadorId(agenda.getCriador().getId());
         dto.setCriadorNome(agenda.getCriador().getNome());
