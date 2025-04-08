@@ -51,5 +51,19 @@ public class UsuarioController {
         usuarioService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+
+    //Usuário para busca filtrada por nome
+    @GetMapping("/filtro")
+    public ResponseEntity<List<UsuarioResponseDTO>> filtrarPorNome(@RequestParam String nome) {
+        List<UsuarioResponseDTO> usuarios = usuarioService.filtrarPorNome(nome);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping(params = "nome")
+    public ResponseEntity<List<UsuarioResponseDTO>> buscarPorNome(@RequestParam String nome) {
+        return ResponseEntity.ok(
+                usuarioService.buscarPorNome(nome)
+        );
+    }
 }
 

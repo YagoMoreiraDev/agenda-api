@@ -65,5 +65,24 @@ public class UsuarioService {
         Usuario u = buscarPorId(id);
         return new UsuarioResponseDTO(u.getId(), u.getNome(), u.getCpf(), u.getEmail(), u.getSetor());
     }
+
+    public List<UsuarioResponseDTO> filtrarPorNome(String nome) {
+        return usuarioRepository.findByNomeStartingWithIgnoreCase(nome).stream()
+                .map(u -> new UsuarioResponseDTO(
+                        u.getId(),
+                        u.getNome(),
+                        u.getCpf(),
+                        u.getEmail(),
+                        u.getSetor()
+                )).toList();
+    }
+
+    public List<UsuarioResponseDTO> buscarPorNome(String nome) {
+        return usuarioRepository.findByNomeStartingWithIgnoreCase(nome)
+                .stream()
+                .map(u -> new UsuarioResponseDTO(
+                        u.getId(), u.getNome(), u.getCpf(), u.getEmail(), u.getSetor()))
+                .toList();
+    }
 }
 

@@ -71,11 +71,14 @@ public class AgendaService {
         Usuario criador = usuarioRepository.findById(dto.getCriadorId())
                 .orElseThrow(() -> new RuntimeException("Criador não encontrado"));
 
-        Local local = localRepository.findById(dto.getLocalId())
+        // ✅ Se não foi informado um localId, usa o ID da sala padrão (7)
+        Long localId = (dto.getLocalId() == null || dto.getLocalId() == 0) ? 7L : dto.getLocalId();
+
+        Local local = localRepository.findById(localId)
                 .orElseThrow(() -> new RuntimeException("Local não encontrado"));
 
-        // ✅ Verificação de conflito
-        if (agendaRepository.existsByLocalIdAndDataHoraReuniao(dto.getLocalId(), dto.getDataHoraReuniao())) {
+        // ✅ Verifica conflito no local + dataHora
+        if (agendaRepository.existsByLocalIdAndDataHoraReuniao(localId, dto.getDataHoraReuniao())) {
             throw new RuntimeException("Já existe um agendamento neste local, data e hora.");
         }
 
