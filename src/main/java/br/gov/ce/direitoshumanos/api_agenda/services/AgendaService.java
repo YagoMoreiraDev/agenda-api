@@ -172,7 +172,7 @@ public class AgendaService {
     }
 
     public Page<AgendaResponseDTO> listarHistoricoDeReunioesDoUsuarioDTO(Long usuarioId, int pagina) {
-        Pageable pageable = PageRequest.of(pagina, 10);
+        Pageable pageable = PageRequest.of(pagina, 4);
 
         // Elimina duplicações
         Set<Agenda> agendasUnicas = new LinkedHashSet<>(agendaRepository.buscarHistoricoDeReunioesFetch(usuarioId));
