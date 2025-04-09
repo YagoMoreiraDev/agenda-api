@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class AgendaDTO {
     private Long localId;
 
     @NotNull(message = "A data e hora da reunião é obrigatória")
-    private LocalDateTime dataHoraReuniao;
+    private OffsetDateTime dataHoraReuniao;
 
     @NotBlank(message = "O assunto da reunião é obrigatório")
     private String assunto;

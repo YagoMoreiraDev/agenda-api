@@ -5,8 +5,12 @@ import br.gov.ce.direitoshumanos.api_agenda.enums.TipoAgenda;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -39,7 +43,8 @@ public class Agenda {
     @CreationTimestamp
     private LocalDateTime dataCriacao;
 
-    private LocalDateTime dataHoraReuniao;
+    @Column(name = "data_hora_reuniao", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime dataHoraReuniao;
 
     private String assunto;
 

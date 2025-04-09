@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/agendas")
 @RequiredArgsConstructor
@@ -87,6 +89,22 @@ public class AgendaController {
             @RequestParam(defaultValue = "0") int pagina
     ) {
         return agendaService.listarPorStatus(status, usuarioId, pagina);
+    }
+
+    // 🔹 GET - Buscar todas as agendas por status CONFIRMADO
+    @GetMapping("/confirmadas")
+    public ResponseEntity<List<AgendaResponseDTO>> listarConfirmadas(@RequestParam Long usuarioId) {
+        List<AgendaResponseDTO> dtos = agendaService.listarReunioesConfirmadasDoUsuario(usuarioId);
+        return ResponseEntity.ok(dtos);
+    }
+
+    // 🔹 GET - Buscar todas as agendas por status CONFIRMADO paginada
+    @GetMapping("/confirmadas-futuras")
+    public ResponseEntity<Page<AgendaResponseDTO>> listarConfirmadasFuturas(
+            @RequestParam Long usuarioId,
+            @RequestParam(defaultValue = "0") int pagina
+    ) {
+        return ResponseEntity.ok(agendaService.listarConfirmadasFuturas(usuarioId, pagina));
     }
 
     // 🔹 PUT - Confirmar uma agenda

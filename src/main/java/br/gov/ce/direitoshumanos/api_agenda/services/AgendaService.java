@@ -218,6 +218,36 @@ public class AgendaService {
         return agendaRepository.save(agenda);
     }
 
+    public List<AgendaResponseDTO> listarReunioesConfirmadasDoUsuario(Long usuarioId) {
+        Set<Agenda> confirmadas = new LinkedHashSet<>();
+        confirmadas.addAll(agendaRepository.buscarConfirmadasCriadasPor(usuarioId));
+        confirmadas.addAll(agendaRepository.buscarConfirmadasOndeParticipa(usuarioId));
+
+        return confirmadas.stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public Page<AgendaResponseDTO> listarConfirmadasFuturas(Long usuarioId, int pagina) {
+        Pageable pageable = PageRequest.of(pagina, 8); // ✅ 8 por página
+
+        Set<Agenda> agendas = new LinkedHashSet<>(
+                agendaRepository.buscarConfirmadasFuturasPorUsuario(usuarioId)
+        );
+
+        List<Agenda> lista = new ArrayList<>(agendas);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), lista.size());
+
+        List<AgendaResponseDTO> pageContent = lista.subList(start, end)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+
+        return new PageImpl<>(pageContent, pageable, lista.size());
+    }
+
     public AgendaResponseDTO toDTO(Agenda agenda) {
         AgendaResponseDTO dto = new AgendaResponseDTO();
         dto.setId(agenda.getId());

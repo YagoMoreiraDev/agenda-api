@@ -4,13 +4,16 @@ import br.gov.ce.direitoshumanos.api_agenda.enums.StatusEnum;
 import br.gov.ce.direitoshumanos.api_agenda.enums.TipoAgenda;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class AgendaResponseDTO {
 
     private Long id;
     private String assunto;
-    private LocalDateTime dataHoraReuniao;
+    private OffsetDateTime dataHoraReuniao;
     private TipoAgenda tipo;
     private StatusEnum status;
 
@@ -28,8 +31,11 @@ public class AgendaResponseDTO {
     public String getAssunto() { return assunto; }
     public void setAssunto(String assunto) { this.assunto = assunto; }
 
-    public LocalDateTime getDataHoraReuniao() { return dataHoraReuniao; }
-    public void setDataHoraReuniao(LocalDateTime dataHoraReuniao) { this.dataHoraReuniao = dataHoraReuniao; }
+    public OffsetDateTime getDataHoraReuniao() { return dataHoraReuniao; }
+    public void setDataHoraReuniao(OffsetDateTime dataHoraReuniao) {
+        // Usa o fuso correto de São Paulo
+        this.dataHoraReuniao = dataHoraReuniao;
+    }
 
     public TipoAgenda getTipo() { return tipo; }
     public void setTipo(TipoAgenda tipo) { this.tipo = tipo; }

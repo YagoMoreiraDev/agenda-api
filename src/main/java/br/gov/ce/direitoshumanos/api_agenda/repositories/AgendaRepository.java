@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,6 +94,36 @@ public interface AgendaRepository extends JpaRepository<Agenda, Long> {
     """)
     List<Agenda> buscarPorStatus(@Param("status") StatusEnum status, @Param("usuarioId") Long usuarioId);
 
-    boolean existsByLocalIdAndDataHoraReuniao(Long localId, LocalDateTime dataHoraReuniao);
+    @Query("""
+    SELECT DISTINCT a FROM Agenda a
+    LEFT JOIN FETCH a.participantes
+    WHERE a.criador.id = :usuarioId
+    AND a.status = 'CONFIRMADO'
+    AND a.dataHoraReuniao >= CURRENT_TIMESTAMP
+    ORDER BY a.dataHoraReuniao
+    """)
+    List<Agenda> buscarConfirmadasCriadasPor(@Param("usuarioId") Long usuarioId);
+
+    @Query("""
+    SELECT DISTINCT a FROM Agenda a
+    LEFT JOIN FETCH a.participantes p
+    WHERE p.id = :usuarioId
+    AND a.status = 'CONFIRMADO'
+    AND a.dataHoraReuniao >= CURRENT_TIMESTAMP
+    ORDER BY a.dataHoraReuniao
+    """)
+    List<Agenda> buscarConfirmadasOndeParticipa(@Param("usuarioId") Long usuarioId);
+
+    @Query("""
+    SELECT DISTINCT a FROM Agenda a
+    LEFT JOIN FETCH a.participantes p
+    WHERE (a.criador.id = :usuarioId OR p.id = :usuarioId)
+    AND a.status = 'CONFIRMADO'
+    AND a.dataHoraReuniao >= CURRENT_TIMESTAMP
+    ORDER BY a.dataHoraReuniao ASC
+    """)
+    List<Agenda> buscarConfirmadasFuturasPorUsuario(@Param("usuarioId") Long usuarioId);
+
+    boolean existsByLocalIdAndDataHoraReuniao(Long localId, OffsetDateTime dataHoraReuniao);
 
 }
