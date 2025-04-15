@@ -26,6 +26,8 @@ public class UsuarioDTO {
     @Email(message = "E-mail inválido")
     private String email;
 
+    private String senha;
+
     @NotBlank(message = "O setor é obrigatório")
     private String setor;
 }

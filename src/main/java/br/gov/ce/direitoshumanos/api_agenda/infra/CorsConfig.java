@@ -12,11 +12,12 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**") // ou "/**" se quiser liberar tudo
-                        .allowedOrigins("http://localhost:3000")
+                registry.addMapping("/**") // liberar tudo para testes
+                        .allowedOrigins("http://localhost:3000") // seu frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .exposedHeaders("Authorization") // 👈 importante se quiser que o frontend leia o header Authorization de volta
+                        .allowCredentials(true); // importante se usar cookies ou autenticação baseada em sessão
             }
         };
     }

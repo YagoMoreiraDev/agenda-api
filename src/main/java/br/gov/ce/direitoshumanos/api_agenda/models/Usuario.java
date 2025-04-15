@@ -26,6 +26,13 @@ public class Usuario {
 
     @Column(unique = true, nullable = false)
     private String cpf;
+
+    @Column(nullable = true)
+    private String senha;
+
+    @Column(name = "precisa_alterar_senha", nullable = false)
+    private boolean precisaAlterarSenha = true;
+
     private String email;
     private String setor;
 

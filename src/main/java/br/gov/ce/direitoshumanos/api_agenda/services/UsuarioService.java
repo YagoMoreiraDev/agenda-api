@@ -34,6 +34,10 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    public Usuario salvar(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
     public Usuario atualizar(Long id, UsuarioDTO dto) {
         Usuario existente = buscarPorId(id);
         existente.setNome(dto.getNome());
