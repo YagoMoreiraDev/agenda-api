@@ -71,8 +71,8 @@ public class AgendaService {
         Usuario criador = usuarioRepository.findById(dto.getCriadorId())
                 .orElseThrow(() -> new RuntimeException("Criador não encontrado"));
 
-        // ✅ Se não foi informado um localId, usa o ID da sala padrão (6)
-        Long localId = (dto.getLocalId() == null || dto.getLocalId() == 0) ? 6L : dto.getLocalId();
+        // ✅ Se não foi informado um localId, usa o ID da sala padrão (1)
+        Long localId = (dto.getLocalId() == null || dto.getLocalId() == 0) ? 1L : dto.getLocalId();
 
         Local local = localRepository.findById(localId)
                 .orElseThrow(() -> new RuntimeException("Local não encontrado"));
