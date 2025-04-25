@@ -79,5 +79,16 @@ public class UsuarioController {
 
         return ResponseEntity.ok("Senha atualizada com sucesso.");
     }
+
+    // 🔐 PUT - Resete senha
+    @PutMapping("/{id}/resetar-senha")
+    public ResponseEntity<?> resetarSenhaParaCpf(@PathVariable Long id) {
+        var usuario = usuarioService.buscarPorId(id);
+        usuario.setSenha(passwordEncoder.encode(usuario.getCpf())); // usa o próprio CPF como senha
+        usuario.setPrecisaAlterarSenha(true);
+        usuarioService.salvar(usuario);
+
+        return ResponseEntity.ok("Senha resetada com sucesso. A senha agora é o CPF.");
+    }
 }
 
