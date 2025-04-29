@@ -13,7 +13,9 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // liberar tudo para testes
-                        .allowedOrigins("http://localhost:7012") // seu frontend
+                        .allowedOrigins(
+                                "http://localhost:3000"
+                        ) // seu frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .exposedHeaders("Authorization") // 👈 importante se quiser que o frontend leia o header Authorization de volta
