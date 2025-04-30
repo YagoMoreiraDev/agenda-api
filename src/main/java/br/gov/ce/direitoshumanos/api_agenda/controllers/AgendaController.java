@@ -67,6 +67,15 @@ public class AgendaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // 🔹 POST - Reservar nova agenda
+    @PostMapping("/reservas")
+    public ResponseEntity<AgendaResponseDTO> criarReservaConfirmada(@Valid @RequestBody AgendaDTO dto) {
+        // Garante que a reserva seja salva com status CONFIRMADO
+        Agenda nova = agendaService.salvarReservaComStatusConfirmado(dto);
+        AgendaResponseDTO response = agendaService.toDTO(nova);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     // 🔹 PUT - Atualizar agenda
     @PutMapping("/{id}")
     public ResponseEntity<AgendaResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody AgendaDTO dto) {

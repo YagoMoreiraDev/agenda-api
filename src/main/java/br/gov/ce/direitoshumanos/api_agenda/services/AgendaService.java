@@ -248,6 +248,30 @@ public class AgendaService {
         return new PageImpl<>(pageContent, pageable, lista.size());
     }
 
+    public Agenda salvarReservaComStatusConfirmado(AgendaDTO dto) {
+        Usuario criador = usuarioRepository.findById(dto.getCriadorId())
+                .orElseThrow(() -> new RuntimeException("Criador não encontrado"));
+
+        Long localId = (dto.getLocalId() == null || dto.getLocalId() == 0) ? 1L : dto.getLocalId();
+        Local local = localRepository.findById(localId)
+                .orElseThrow(() -> new RuntimeException("Local não encontrado"));
+
+        if (agendaRepository.existsByLocalIdAndDataHoraReuniao(localId, dto.getDataHoraReuniao())) {
+            throw new RuntimeException("Já existe um agendamento neste local, data e hora.");
+        }
+
+        Agenda agenda = new Agenda();
+        agenda.setCriador(criador);
+        agenda.setLocal(local);
+        agenda.setParticipantes(List.of());
+        agenda.setDataHoraReuniao(dto.getDataHoraReuniao());
+        agenda.setAssunto(dto.getAssunto());
+        agenda.setTipo(TipoAgenda.RESERVA);
+        agenda.setStatus(StatusEnum.CONFIRMADO); // <-- fixo como CONFIRMADO
+
+        return agendaRepository.save(agenda);
+    }
+
     public AgendaResponseDTO toDTO(Agenda agenda) {
         AgendaResponseDTO dto = new AgendaResponseDTO();
         dto.setId(agenda.getId());

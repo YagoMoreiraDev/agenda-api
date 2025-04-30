@@ -14,7 +14,10 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // liberar tudo para testes
                         .allowedOrigins(
-                                "http://localhost:3000"
+                                "http://localhost:3000",
+                                "http://10.7.2.21:7012",
+                                "http://sysagenda.sedih.com:7012",
+                                "http://sysagenda.sedih.com"
                         ) // seu frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
