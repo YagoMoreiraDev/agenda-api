@@ -272,6 +272,21 @@ public class AgendaService {
         return agendaRepository.save(agenda);
     }
 
+    public List<AgendaResponseDTO> listarTodasFuturasSemPaginacao(Long usuarioId) {
+        Set<Agenda> agendas = new LinkedHashSet<>();
+
+        // Reuniões futuras como criador
+        agendas.addAll(agendaRepository.buscarReunioesFuturasCriadasPorFetch(usuarioId));
+
+        // Reuniões futuras como participante
+        agendas.addAll(agendaRepository.buscarReunioesFuturasOndeParticipaFetch(usuarioId));
+
+        return agendas.stream()
+                .filter(a -> a.getDataHoraReuniao().isAfter(java.time.OffsetDateTime.now())) // ⚠️ Só por garantia
+                .map(this::toDTO)
+                .toList();
+    }
+
     public AgendaResponseDTO toDTO(Agenda agenda) {
         AgendaResponseDTO dto = new AgendaResponseDTO();
         dto.setId(agenda.getId());

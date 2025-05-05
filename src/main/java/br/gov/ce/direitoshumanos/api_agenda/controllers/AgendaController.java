@@ -129,4 +129,11 @@ public class AgendaController {
         Agenda cancelada = agendaService.atualizarStatus(id, StatusEnum.CANCELADO);
         return ResponseEntity.ok(agendaService.toDTO(cancelada));
     }
+
+    @GetMapping("/todas")
+    public ResponseEntity<List<AgendaResponseDTO>> listarTodasFuturasSemPaginacao(
+            @RequestParam Long usuarioId
+    ) {
+        return ResponseEntity.ok(agendaService.listarTodasFuturasSemPaginacao(usuarioId));
+    }
 }
